@@ -8,6 +8,7 @@ use Auryn\Injector;
 use League\Plates\Engine as Plates;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run as Whoops;
 
 $injector->share($injector);
@@ -22,6 +23,7 @@ $injector->define(Router::class, [
 
 $injector->share(Whoops::class);
 $injector->prepare(Whoops::class, function (Whoops $whoops, Injector $injector) use ($config) {
+    $whoops->pushHandler(new PrettyPageHandler);
     $whoops->pushHandler($injector->make(ErrorHandler::class, [
         ':isDebug' => $config->get('debug')
     ]));
