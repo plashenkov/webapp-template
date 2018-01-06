@@ -44,7 +44,7 @@ class Router extends RouteCollector
     }
 
     /**
-     * Добавляем GET и POST роут в коллекцию
+     * Adds GET and POST routes to the collection.
      * @param string $route
      * @param mixed $handler
      */
@@ -54,7 +54,7 @@ class Router extends RouteCollector
     }
 
     /**
-     * Ищет подходящий роут, запускает его, возвращает результат пользователю.
+     * Performs a dispatch.
      * @throws HttpException
      * @throws \Auryn\InjectionException
      */
@@ -83,7 +83,7 @@ class Router extends RouteCollector
     }
 
     /**
-     * Предварительно подготавливает обработчик (добавляет namespace и пр.).
+     * Prepares route handler (adds namespace, etc.)
      * @param $handler
      * @return string
      */
@@ -101,7 +101,7 @@ class Router extends RouteCollector
     }
 
     /**
-     * Выводит результат в браузер.
+     * Echoes result to a user.
      * @param mixed $result
      */
     protected function echoResult($result)

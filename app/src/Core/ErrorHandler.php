@@ -18,7 +18,7 @@ class ErrorHandler extends Handler
 
     /**
      * ErrorHandler constructor.
-     * @param bool $isDebug Определяет, включен ли режим отладки.
+     * @param bool $isDebug
      * @param Plates $view
      */
     public function __construct($isDebug, Plates $view)
@@ -28,7 +28,7 @@ class ErrorHandler extends Handler
     }
 
     /**
-     * Обработка исключительной ситуации.
+     * Exception handling.
      * @return int
      */
     public function handle()
@@ -54,7 +54,7 @@ class ErrorHandler extends Handler
     }
 
     /**
-     * Формирует ответ в формате JSON.
+     * Builds a response in JSON format.
      * @return array
      */
     protected function buildJsonResponse()
@@ -95,7 +95,7 @@ class ErrorHandler extends Handler
     }
 
     /**
-     * Формирует ответ на основе view.
+     * Builds a response based on Plates templates.
      * @return string
      */
     protected function buildHtmlResponse()
@@ -118,7 +118,7 @@ class ErrorHandler extends Handler
     }
 
     /**
-     * Вычисляет и возвращает код ошибки HTTP.
+     * Finds out and returns HTTP error code.
      * @return int
      */
     protected function getStatusCode()
@@ -133,7 +133,7 @@ class ErrorHandler extends Handler
     }
 
     /**
-     * Возвращает content-type.
+     * Returns appropriate content-type.
      * @return string
      */
     public function contentType()

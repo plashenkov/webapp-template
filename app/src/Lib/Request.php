@@ -29,7 +29,7 @@ class Request
     }
 
     /**
-     * Возвращает имя хоста
+     * Returns host name.
      * @return string
      */
     public function getHost()
@@ -38,7 +38,7 @@ class Request
     }
 
     /**
-     * Возвращает метод запроса (GET, POST и т.д.).
+     * Returns request method.
      * @return string
      */
     public function getRequestMethod()
@@ -47,11 +47,11 @@ class Request
     }
 
     /**
-     * Возвращает базовый путь.
-     * Для запроса с именем скрипта имя скрипта включено в базовый путь
-     * (например, для /subfolder/index.php/hi это будет /subfolder/index.php).
-     * Для запроса без имени скрипта имя скрипта не включено в базовый путь.
-     *
+     * Returns base path.
+     * For a request with explicit script name, this script name is included in base path:
+     *   request: /subfolder/index.php/hi
+     *   base path: /subfolder/index.php
+     * If script name is omitted, it will not be included.
      * @return string
      */
     public function getBasePath()
@@ -60,7 +60,10 @@ class Request
     }
 
     /**
-     * Возвращает путь запроса (для /subfolder/index.php/hi это будет /hi).
+     * Returns request path.
+     * Example:
+     *   request: /subfolder/index.php/hi
+     *   path: /hi
      * @return string
      */
     public function getRequestPath()
@@ -69,19 +72,20 @@ class Request
     }
 
     /**
-     * Возвращает параметр из GET и POST.
-     * @param string $key Имя параметра.
-     * @param mixed $default Значение по умолчанию.
+     * Searches and returns parameter from both query (GET) and body (POST or JSON).
+     * A dot syntax can be used to get to a nested value.
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function getParam($key, $default = null)
     {
-        $result = getArrayItem($this->bodyParams, $key);
+        $result = arrayGetItem($this->bodyParams, $key);
         if (isset($result)) {
             return $result;
         }
 
-        $result = getArrayItem($_GET, $key);
+        $result = arrayGetItem($_GET, $key);
         if (isset($result)) {
             return $result;
         }
@@ -90,7 +94,7 @@ class Request
     }
 
     /**
-     * Возвращает комбиниированный массив GET- и POST- (или JSON-) параметров.
+     * Returns a combined array of parameters from query (GET) and body (POST or JSON).
      * @param array|null $takeOnly
      * @return array
      */
@@ -100,59 +104,61 @@ class Request
             $this->allParams = array_replace($_GET, $this->bodyParams);
         }
 
-        return $this->filterParams($this->allParams, $takeOnly);
+        return arrayTakeOnly($this->allParams, $takeOnly);
     }
 
     /**
-     * Возвращает GET-параметр.
-     * @param string $key Имя параметра.
-     * @param mixed $default Значение по умолчанию.
+     * Returns query (GET) parameter.
+     * A dot syntax can be used to get to a nested value.
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function getQueryParam($key, $default = null)
     {
-        $result = getArrayItem($_GET, $key);
+        $result = arrayGetItem($_GET, $key);
 
         return isset($result) ? $result : $default;
     }
 
     /**
-     * Возвращает массив всех GET-параметров.
+     * Returns an array of all query (GET) parameters.
      * @param array|null $takeOnly
      * @return mixed
      */
     public function getQueryParams($takeOnly = null)
     {
-        return $this->filterParams($_GET, $takeOnly);
+        return arrayTakeOnly($_GET, $takeOnly);
     }
 
     /**
-     * Возвращает POST- или JSON-параметр.
-     * @param string $key Имя параметра.
-     * @param mixed $default Значение по умолчанию.
+     * Returns POST or JSON body parameter.
+     * A dot syntax can be used to get to a nested value.
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function getBodyParam($key, $default = null)
     {
-        $result = getArrayItem($this->bodyParams, $key);
+        $result = arrayGetItem($this->bodyParams, $key);
 
         return isset($result) ? $result : $default;
     }
 
     /**
-     * Возвращает массив всех POST- или JSON-параметров.
+     * Returns an array of all body (POST or JSON) parameters.
      * @param array|null $takeOnly
      * @return array
      */
     public function getBodyParams($takeOnly = null)
     {
-        return $this->filterParams($this->bodyParams, $takeOnly);
+        return arrayTakeOnly($this->bodyParams, $takeOnly);
     }
 
     /**
-     * Возвращает параметр (аргумент) из роута.
-     * @param string $key Имя параметра.
-     * @param mixed $default Значение по умолчанию.
+     * Returns a parameter (an argument) from a route.
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function getRouteParam($key, $default = null)
@@ -160,13 +166,18 @@ class Request
         return isset($this->routeParams[$key]) ? $this->routeParams[$key] : $default;
     }
 
+    /**
+     * Returns all route parameters.
+     * @param array|null $takeOnly
+     * @return array
+     */
     public function getRouteParams($takeOnly = null)
     {
-        return $this->filterParams($this->routeParams, $takeOnly);
+        return arrayTakeOnly($this->routeParams, $takeOnly);
     }
 
     /**
-     * Устанавливает значения аргументов из роута.
+     * Inject route parameters.
      * @param array $routeParams
      */
     public function setRouteParams(array $routeParams)
@@ -175,9 +186,9 @@ class Request
     }
 
     /**
-     * Проверяет, соответствует ли текущий запрос заданной строке.
-     * @param string $requestPath Строка для проверки.
-     * @param bool $exact Exact match.
+     * Checks if current request matches a specified string.
+     * @param string $requestPath A string to compare.
+     * @param bool $exact Exact match is expected.
      * @return bool
      */
     public function match($requestPath, $exact = false)
@@ -193,7 +204,7 @@ class Request
     }
 
     /**
-     * Выделяет базовый путь и убирает его из пути запроса.
+     * Extract base path and remove it from the request path.
      */
     private function processPath()
     {
@@ -212,7 +223,7 @@ class Request
     }
 
     /**
-     * Парсим тело запроса (POST- или JSON-данные)
+     * Parses request body and extracts POST and JSON data.
      */
     protected function parseBody()
     {
@@ -223,14 +234,5 @@ class Request
         } else {
             $this->bodyParams = $_POST;
         }
-    }
-
-    protected function filterParams($params, $takeOnly = null)
-    {
-        if (is_array($takeOnly)) {
-            return array_intersect_key($params, array_flip($takeOnly));
-        }
-
-        return $params;
     }
 }

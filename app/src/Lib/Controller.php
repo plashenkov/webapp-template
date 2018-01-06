@@ -17,9 +17,9 @@ class Controller
     }
 
     /**
-     * Отправляет HTTP-заголовок.
-     * @param string $name Имя заголовка.
-     * @param string $value Значение заголовка.
+     * Sends HTTP header.
+     * @param string $name
+     * @param string $value
      */
     public function header($name, $value)
     {
@@ -27,7 +27,7 @@ class Controller
     }
 
     /**
-     * Устанавливает код HTTP-ответа.
+     * Sets HTTP response code.
      * @param int $responseCode
      */
     public function responseCode($responseCode)
@@ -36,8 +36,8 @@ class Controller
     }
 
     /**
-     * Осущствляет перенаправление на другой адрес.
-     * @param string $location Адрес для перенаправления.
+     * Performs redirect.
+     * @param string $location
      * @return null
      */
     public function redirect($location)
@@ -48,10 +48,10 @@ class Controller
     }
 
     /**
-     * Отдаёт файл пользователю.
-     * @param string $file Файл, который нужно отправить.
-     * @param bool $download Форсировать ли скачивание или просто отдать в браузер.
-     * @param string|null $downloadFilename Имя файла при скачивании.
+     * Sends file to a user.
+     * @param string $file
+     * @param bool $download
+     * @param string|null $downloadFilename
      */
     public function sendFile($file, $download = true, $downloadFilename = null)
     {

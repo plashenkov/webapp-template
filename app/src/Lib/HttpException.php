@@ -37,10 +37,6 @@ class HttpException extends \Exception
         return new static($message, 500);
     }
 
-    /**
-     * Возвращает код ошибки HTTP.
-     * @return int
-     */
     public function getStatusCode()
     {
         return $this->statusCode;

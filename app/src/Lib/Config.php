@@ -17,18 +17,19 @@ class Config
     }
 
     /**
-     * Возвращает определенную настройку.
-     * @param string $key Настройка, которую требуется получить.
-     * @param mixed $default Значение по умолчанию.
+     * Returns config option.
+     * You can use the "dot" syntax to get nested values.
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function get($key, $default = null)
     {
-        return getArrayItem($this->config, $key, $default);
+        return arrayGetItem($this->config, $key, $default);
     }
 
     /**
-     * Возвращает массив настроек.
+     * Returns all config options.
      * @return array
      */
     public function getAll()

@@ -35,8 +35,8 @@ if (!function_exists('getMaxUploadSize')) {
     }
 }
 
-if (!function_exists('getArrayItem')) {
-    function getArrayItem($array, $key, $default = null)
+if (!function_exists('arrayGetItem')) {
+    function arrayGetItem($array, $key, $default = null)
     {
         foreach (explode('.', $key) as $segment) {
             if (!is_array($array) || !array_key_exists($segment, $array)) {
@@ -44,6 +44,17 @@ if (!function_exists('getArrayItem')) {
             }
 
             $array = $array[$segment];
+        }
+
+        return $array;
+    }
+}
+
+if (!function_exists('arrayTakeOnly')) {
+    function arrayTakeOnly($array, $takeOnly = null)
+    {
+        if (is_array($takeOnly)) {
+            return array_intersect_key($array, array_flip($takeOnly));
         }
 
         return $array;
