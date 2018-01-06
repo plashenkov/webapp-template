@@ -1,0 +1,36 @@
+<?php
+
+if (!function_exists('ee')) {
+    function ee()
+    {
+        echo '<pre>';
+        array_map('var_dump', func_get_args());
+        echo '</pre>';
+        exit;
+    }
+}
+
+if (!function_exists('getMaxUploadSize')) {
+    function getMaxUploadSize()
+    {
+        $convertPHPSizeToBytes = function ($size) {
+            if (is_numeric($size)) {
+                return $size;
+            }
+
+            $powers = ['K' => 1, 'M' => 2, 'G' => 3, 'Y' => 4, 'P' => 5];
+            $suffix = substr($size, -1);
+            $size = substr($size, 0, -1);
+
+            return $size * (1024 ** $powers[$suffix]);
+        };
+
+        $postMaxSize = ini_get('post_max_size');
+        $uploadMaxSize = ini_get('upload_max_filesize');
+
+        return min(
+            $convertPHPSizeToBytes($postMaxSize),
+            $convertPHPSizeToBytes($uploadMaxSize)
+        );
+    }
+}

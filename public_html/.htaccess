@@ -1,0 +1,17 @@
+RewriteEngine on
+
+# Remove WWW
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
+# Force WWW
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Force HTTPS
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Handle front controller
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]

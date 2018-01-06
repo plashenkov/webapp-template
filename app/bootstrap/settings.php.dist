@@ -1,0 +1,12 @@
+<?php
+
+return [
+    'debug' => true,
+
+    'views' => [
+        'directory' => __DIR__ . '/../frontend/views',
+        'fileExtension' => 'phtml'
+    ],
+
+    'logFile' => __DIR__ . '/../storage/logs/log.txt',
+];

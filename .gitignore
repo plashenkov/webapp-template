@@ -1,0 +1,7 @@
+/.idea
+/app/bootstrap/settings.php
+/node_modules
+/composer.lock
+/yarn.lock
+/yarn-error.log
+/npm-debug.log
