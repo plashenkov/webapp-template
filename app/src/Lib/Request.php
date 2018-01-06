@@ -76,12 +76,14 @@ class Request
      */
     public function getParam($key, $default = null)
     {
-        if (isset($this->bodyParams[$key])) {
-            return $this->bodyParams[$key];
+        $result = getArrayItem($this->bodyParams, $key);
+        if (isset($result)) {
+            return $result;
         }
 
-        if (isset($_GET[$key])) {
-            return $_GET[$key];
+        $result = getArrayItem($_GET, $key);
+        if (isset($result)) {
+            return $result;
         }
 
         return $default;
@@ -109,7 +111,9 @@ class Request
      */
     public function getQueryParam($key, $default = null)
     {
-        return isset($_GET[$key]) ? $_GET[$key] : $default;
+        $result = getArrayItem($_GET, $key);
+
+        return isset($result) ? $result : $default;
     }
 
     /**
@@ -130,7 +134,9 @@ class Request
      */
     public function getBodyParam($key, $default = null)
     {
-        return isset($this->bodyParams[$key]) ? $this->bodyParams[$key] : $default;
+        $result = getArrayItem($this->bodyParams, $key);
+
+        return isset($result) ? $result : $default;
     }
 
     /**
@@ -154,6 +160,11 @@ class Request
         return isset($this->routeParams[$key]) ? $this->routeParams[$key] : $default;
     }
 
+    public function getRouteParams($takeOnly = null)
+    {
+        return $this->filterParams($this->routeParams, $takeOnly);
+    }
+
     /**
      * Устанавливает значения аргументов из роута.
      * @param array $routeParams
@@ -166,15 +177,15 @@ class Request
     /**
      * Проверяет, соответствует ли текущий запрос заданной строке.
      * @param string $requestPath Строка для проверки.
-     * @param bool $strict Строгое сравнение.
+     * @param bool $exact Exact match.
      * @return bool
      */
-    public function match($requestPath, $strict = false)
+    public function match($requestPath, $exact = false)
     {
         $currentPath = ltrim($this->getRequestPath(), '/');
         $requestPath = ltrim($requestPath, '/');
 
-        if ($strict) {
+        if ($exact) {
             return $currentPath === $requestPath;
         }
 
@@ -203,7 +214,7 @@ class Request
     /**
      * Парсим тело запроса (POST- или JSON-данные)
      */
-    public function parseBody()
+    protected function parseBody()
     {
         if (isset($_SERVER['CONTENT_TYPE']) &&
             stripos($_SERVER['CONTENT_TYPE'], 'application/json') === 0
@@ -217,9 +228,6 @@ class Request
     protected function filterParams($params, $takeOnly = null)
     {
         if (is_array($takeOnly)) {
-            // Maybe better way:
-            // https://stackoverflow.com/questions/4260086/php-how-to-use-array-filter-to-filter-array-keys
-
             return array_intersect_key($params, array_flip($takeOnly));
         }
 
