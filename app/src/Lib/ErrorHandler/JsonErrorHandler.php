@@ -3,8 +3,8 @@
 namespace App\Lib\ErrorHandler;
 
 use App\Lib\HttpException;
-//use Bliss\Validation\Exception\ParamValidationException;
-//use Bliss\Validation\Exception\ValidationException;
+use App\Lib\Validation\Exception\ParamValidationException;
+use App\Lib\Validation\Exception\ValidationException;
 use Whoops\Exception\Frame;
 use Whoops\Handler\Handler;
 
@@ -53,9 +53,9 @@ class ErrorHandler extends Handler
             ]
         ];
 
-        /*if ($exception instanceof ValidationException) {
+        if ($exception instanceof ValidationException) {
             $response['error']['validation_errors'] = $exception->getValidationErrors();
-        }*/
+        }
 
         if ($this->isDebug) {
             $frames = $this->getInspector()->getFrames();
@@ -95,12 +95,12 @@ class ErrorHandler extends Handler
             return $exception->getStatusCode();
         }
 
-        /*if (
+        if (
             $exception instanceof ValidationException ||
             $exception instanceof ParamValidationException
         ) {
             return 400;
-        }*/
+        }
 
         return 500;
     }

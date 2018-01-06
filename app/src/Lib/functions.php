@@ -50,6 +50,25 @@ if (!function_exists('arrayGetItem')) {
     }
 }
 
+if (!function_exists('arraySetItem')) {
+    function arraySetItem(&$array, $key, $value)
+    {
+        $segments = explode('.', $key);
+
+        while (count($segments) > 1) {
+            $segment = array_shift($segments);
+
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
+                $array[$segment] = [];
+            }
+
+            $array = &$array[$segment];
+        }
+
+        $array[array_shift($segments)] = $value;
+    }
+}
+
 if (!function_exists('arrayTakeOnly')) {
     function arrayTakeOnly($array, $takeOnly = null)
     {

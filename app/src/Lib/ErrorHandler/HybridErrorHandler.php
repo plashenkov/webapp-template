@@ -3,8 +3,8 @@
 namespace App\Lib\ErrorHandler;
 
 use App\Lib\HttpException;
-//use Bliss\Validation\Exception\ParamValidationException;
-//use Bliss\Validation\Exception\ValidationException;
+use App\Lib\Validation\Exception\ParamValidationException;
+use App\Lib\Validation\Exception\ValidationException;
 use League\Plates\Engine as Plates;
 use Whoops\Exception\Frame;
 use Whoops\Handler\Handler;
@@ -14,8 +14,6 @@ use Whoops\Util\Misc;
  * NOTE: use this class with PrettyPageHandler:
  *   $whoops->pushHandler(new PrettyPageHandler);
  *   $whoops->pushHandler(new HybridErrorHandler($isDebug, $plates));
- *
- * TODO: Validation exception in plain mode?
  */
 
 class HybridErrorHandler extends Handler
@@ -78,9 +76,9 @@ class HybridErrorHandler extends Handler
             ]
         ];
 
-        /*if ($exception instanceof ValidationException) {
+        if ($exception instanceof ValidationException) {
             $response['error']['validation_errors'] = $exception->getValidationErrors();
-        }*/
+        }
 
         if ($this->isDebug) {
             $frames = $this->getInspector()->getFrames();
@@ -143,12 +141,12 @@ class HybridErrorHandler extends Handler
             return $exception->getStatusCode();
         }
 
-        /*if (
+        if (
             $exception instanceof ValidationException ||
             $exception instanceof ParamValidationException
         ) {
             return 400;
-        }*/
+        }
 
         return 500;
     }
