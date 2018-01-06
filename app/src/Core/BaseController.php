@@ -11,10 +11,8 @@ class BaseController extends Controller
     /** @var Plates */
     protected $view;
 
-    public function __construct(
-        Request $request,
-        Plates $view
-    ) {
+    public function __construct(Request $request, Plates $view)
+    {
         parent::__construct($request);
         $this->view = $view;
     }
