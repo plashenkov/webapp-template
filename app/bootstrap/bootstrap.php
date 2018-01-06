@@ -1,7 +1,7 @@
 <?php
 
-use App\Lib\Router;
 use App\Lib\Config;
+use App\Lib\Router;
 use Auryn\Injector;
 use Whoops\Run as Whoops;
 

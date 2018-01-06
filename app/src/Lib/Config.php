@@ -7,12 +7,6 @@ class Config
     /** @var array */
     protected $config;
 
-    /** @var array */
-    protected $concatenatedConfig;
-
-    /** @var string */
-    protected $concatenationDelimiter = '.';
-
     /**
      * Config constructor.
      * @param array $config
@@ -20,7 +14,6 @@ class Config
     public function __construct(array $config)
     {
         $this->config = $config;
-        $this->concatenateConfig($config);
     }
 
     /**
@@ -31,7 +24,7 @@ class Config
      */
     public function get($key, $default = null)
     {
-        return isset($this->concatenatedConfig[$key]) ? $this->concatenatedConfig[$key] : $default;
+        return getArrayItem($this->config, $key, $default);
     }
 
     /**
@@ -41,19 +34,5 @@ class Config
     public function getAll()
     {
         return $this->config;
-    }
-
-    private function concatenateConfig(array $config, $prefix = '')
-    {
-        if ($prefix !== '') {
-            $prefix = $prefix . $this->concatenationDelimiter;
-        }
-
-        foreach ($config as $key => $value) {
-            $this->concatenatedConfig[$prefix . $key] = $value;
-            if (is_array($value)) {
-                $this->concatenateConfig($value, $prefix . $key);
-            }
-        }
     }
 }

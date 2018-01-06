@@ -34,3 +34,18 @@ if (!function_exists('getMaxUploadSize')) {
         );
     }
 }
+
+if (!function_exists('getArrayItem')) {
+    function getArrayItem($array, $key, $default = null)
+    {
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return $default;
+            }
+
+            $array = $array[$segment];
+        }
+
+        return $array;
+    }
+}
