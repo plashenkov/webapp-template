@@ -1,0 +1,19 @@
+@mixin medium {
+  @media (max-width: 1400px) {
+    @content;
+  }
+}
+
+@mixin small {
+  @media (max-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin clearfix {
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
