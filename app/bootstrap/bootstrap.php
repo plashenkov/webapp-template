@@ -1,13 +1,13 @@
 <?php
 
 use App\Lib\Router;
-use App\Lib\Settings;
+use App\Lib\Config;
 use Auryn\Injector;
 use Whoops\Run as Whoops;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$settings = new Settings(require __DIR__ . '/settings.php');
+$config = new Config(require __DIR__ . '/config.php');
 
 $injector = new Injector;
 

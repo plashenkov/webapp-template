@@ -1,5 +1,5 @@
 /.idea
-/app/bootstrap/settings.php
+/app/bootstrap/config.php
 /node_modules
 /composer.lock
 /yarn.lock
