@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Core;
+namespace App\Lib\ResultEmitter;
 
-use App\Lib\ResultEmitter as ResultEmitterInterface;
+use App\Lib\ResultEmitter;
 
-class ResultEmitter implements ResultEmitterInterface
+class JsonResultEmitter implements ResultEmitter
 {
     /** @var bool */
     protected $jsonPrettyPrint;
@@ -16,15 +16,12 @@ class ResultEmitter implements ResultEmitterInterface
 
     public function emit($result)
     {
-        if (is_array($result) || is_object($result)) {
+        if (isset($result)) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(
                 $result,
                 $this->jsonPrettyPrint ? (JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : 0
             );
-        } elseif (isset($result)) {
-            header('Content-Type: text/html; charset=utf-8');
-            echo $result;
         }
     }
 }

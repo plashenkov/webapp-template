@@ -1,14 +1,24 @@
 <?php
 
-namespace App\Core;
+namespace App\Lib\ErrorHandler;
 
 use App\Lib\HttpException;
+//use Bliss\Validation\Exception\ParamValidationException;
+//use Bliss\Validation\Exception\ValidationException;
 use League\Plates\Engine as Plates;
 use Whoops\Exception\Frame;
 use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
 
-class ErrorHandler extends Handler
+/*
+ * NOTE: use this class with PrettyPageHandler:
+ *   $whoops->pushHandler(new PrettyPageHandler);
+ *   $whoops->pushHandler(new HybridErrorHandler($isDebug, $plates));
+ *
+ * TODO: Validation exception in plain mode?
+ */
+
+class HybridErrorHandler extends Handler
 {
     /** @var bool */
     protected $isDebug;
@@ -67,6 +77,10 @@ class ErrorHandler extends Handler
                 'message' => $exception->getMessage()
             ]
         ];
+
+        /*if ($exception instanceof ValidationException) {
+            $response['error']['validation_errors'] = $exception->getValidationErrors();
+        }*/
 
         if ($this->isDebug) {
             $frames = $this->getInspector()->getFrames();
@@ -129,11 +143,18 @@ class ErrorHandler extends Handler
             return $exception->getStatusCode();
         }
 
+        /*if (
+            $exception instanceof ValidationException ||
+            $exception instanceof ParamValidationException
+        ) {
+            return 400;
+        }*/
+
         return 500;
     }
 
     /**
-     * Returns appropriate content-type.
+     * Define content-type.
      * @return string
      */
     public function contentType()

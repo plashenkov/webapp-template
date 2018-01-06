@@ -1,7 +1,7 @@
 <?php
 
-use App\Core\ErrorHandler;
-use App\Core\ResultEmitter;
+use App\Lib\ErrorHandler\HybridErrorHandler;
+use App\Lib\ResultEmitter\HybridResultEmitter;
 use App\Lib\Router;
 use App\Lib\Request;
 use Auryn\Injector;
@@ -18,13 +18,13 @@ $injector->share(Request::class);
 $injector->share(Router::class);
 $injector->define(Router::class, [
     ':controllersNamespace' => 'App\Controllers',
-    ':resultEmitter' => new ResultEmitter($config->get('debug'))
+    ':resultEmitter' => new HybridResultEmitter($config->get('debug'))
 ]);
 
 $injector->share(Whoops::class);
 $injector->prepare(Whoops::class, function (Whoops $whoops, Injector $injector) use ($config) {
     $whoops->pushHandler(new PrettyPageHandler);
-    $whoops->pushHandler($injector->make(ErrorHandler::class, [
+    $whoops->pushHandler($injector->make(HybridErrorHandler::class, [
         ':isDebug' => $config->get('debug')
     ]));
 });
