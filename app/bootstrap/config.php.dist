@@ -3,6 +3,12 @@
 return [
     'debug' => true,
 
+    'database' => [
+        'dsn' => 'mysql:host=...;dbname=...;charset=utf8',
+        'user' => '...',
+        'password' => '...'
+    ],
+
     'views' => [
         'directory' => __DIR__ . '/../frontend/views',
         'fileExtension' => 'phtml'

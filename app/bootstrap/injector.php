@@ -1,5 +1,6 @@
 <?php
 
+use App\Lib\DB\DB;
 use App\Lib\ErrorHandler\HybridErrorHandler;
 use App\Lib\ResultEmitter\HybridResultEmitter;
 use App\Lib\Router;
@@ -39,4 +40,11 @@ $injector->share(Plates::class);
 $injector->define(Plates::class, [
     ':directory' => $config->get('views.directory'),
     ':fileExtension' => $config->get('views.fileExtension')
+]);
+
+$injector->share(DB::class);
+$injector->define(DB::class, [
+    ':dsn' => $config->get('database.dsn'),
+    ':username' => $config->get('database.user'),
+    ':passwd' => $config->get('database.password')
 ]);
