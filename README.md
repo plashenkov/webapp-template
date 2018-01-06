@@ -1,6 +1,6 @@
 # Web Application Template
 
-A minimal and extendable PHP and Vue application template.
+A minimal and extendable web (PHP and Vue) application template.
 
 ## Quick usage
 
@@ -19,6 +19,9 @@ A minimal and extendable PHP and Vue application template.
 
    ```
    yarn run watch
+   ```
+   
+   ```
    yarn run build
    ```
 
