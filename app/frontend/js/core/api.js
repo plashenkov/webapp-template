@@ -1,6 +1,17 @@
 export default {
   doRequest(method, args = {}) {
     return new Promise((resolve, reject) => {
+      /*
+      const token = cookies.get('token');
+      if (token) {
+        if (args instanceof FormData) {
+          args.set('token', token);
+        } else {
+          args.token = token;
+        }
+      }
+      */
+
       const ajaxOptions = {
         url: '/api/' + method,
         method: 'POST',
