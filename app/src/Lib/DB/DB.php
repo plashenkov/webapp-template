@@ -6,6 +6,9 @@ use PDO;
 
 class DB extends PDO
 {
+    /** @var string */
+    protected $sqlMarker = ':sql'; // lowercase!
+
     /** @var array */
     protected $defaultOptions = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -77,8 +80,17 @@ class DB extends PDO
      */
     public function composeValues(array $data)
     {
-        $idents = implode(', ', array_keys($data));
-        $values = implode(', ', array_map([$this, 'quote'], $data));
+        $idents = [];
+        $values = [];
+        foreach ($data as $key => $value) {
+            if (!$this->hasSqlMarker($key)) {
+                $value = $this->quote($value);
+            }
+            $idents[] = $key;
+            $values[] = $value;
+        }
+        $idents = implode(', ', $idents);
+        $values = implode(', ', $values);
 
         return " ($idents) VALUES ($values) ";
     }
@@ -95,9 +107,33 @@ class DB extends PDO
     {
         $pairs = [];
         foreach ($data as $key => $value) {
-            $pairs[] = $key . ' = ' . $this->quote($value);
+            if (!$this->hasSqlMarker($key)) {
+                $value = $this->quote($value);
+            }
+            $pairs[] = "$key = $value";
+        }
+        $pairs = implode(', ', $pairs);
+
+        return " SET $pairs ";
+    }
+
+    /**
+     * Checks if $key has SQL marker and removes it if presented.
+     * @param $key
+     * @return bool
+     */
+    protected function hasSqlMarker(&$key)
+    {
+        if (!empty($this->sqlMarker)) {
+            $len = mb_strlen($this->sqlMarker);
+
+            if (mb_strtolower(mb_substr($key, -$len)) === $this->sqlMarker) {
+                $key = mb_substr($key, 0, -$len);
+
+                return true;
+            }
         }
 
-        return ' SET ' . implode(', ', $pairs) . ' ';
+        return false;
     }
 }
