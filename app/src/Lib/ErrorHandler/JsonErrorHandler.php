@@ -8,7 +8,7 @@ use App\Lib\Validation\Exception\ValidationException;
 use Whoops\Exception\Frame;
 use Whoops\Handler\Handler;
 
-class ErrorHandler extends Handler
+class JsonErrorHandler extends Handler
 {
     /** @var bool */
     protected $isDebug;
