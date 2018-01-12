@@ -59,11 +59,13 @@ class DB extends PDO
         }
 
         if ($value instanceof \DateTime) {
-            // MySQL:
-            return parent::quote($value->format('Y-m-d H:i:s'));
+            switch ($this->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+                case 'oci':
+                    return "TO_DATE('{$value->format('Y-m-d H:i:s')}', 'YYYY-MM-DD HH24:MI:SS')";
 
-            // Oracle:
-            // return "TO_DATE('{$value->format('Y-m-d H:i:s')}', 'YYYY-MM-DD HH24:MI:SS')";
+                default:
+                    return parent::quote($value->format('Y-m-d H:i:s'));
+            }
         }
 
         return parent::quote($value, $parameterType);
