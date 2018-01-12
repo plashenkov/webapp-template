@@ -50,13 +50,12 @@ class DB extends PDO
             return 'NULL';
         }
 
-        if (is_bool($value)) {
-            return $value ? 1 : 0;
+        if (is_int($value)) {
+            return $value;
         }
 
-        $intValue = filter_var($value, FILTER_VALIDATE_INT);
-        if ($intValue !== false) {
-            return $intValue;
+        if (is_bool($value)) {
+            return $value ? 1 : 0;
         }
 
         if ($value instanceof \DateTime) {
