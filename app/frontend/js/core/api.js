@@ -1,8 +1,61 @@
+function objectToFormData(obj, onlyIfHasFiles = false) {
+  if (obj instanceof FormData) {
+    return obj;
+  }
+
+  const formData = new FormData;
+  let hasFiles = false;
+
+  function o2fd(obj, prevKey) {
+    Object.keys(obj).forEach(key => {
+      const item = obj[key];
+      const isFile = item instanceof File;
+
+      if (isFile) {
+        hasFiles = true;
+      }
+
+      key = prevKey ? (prevKey + '[' + key + ']') : key;
+
+      if (item === Object(item) && !isFile) {
+        o2fd(item, key);
+      } else {
+        formData.append(key, item);
+      }
+    });
+  }
+
+  o2fd(obj);
+
+  return !onlyIfHasFiles || hasFiles ? formData : obj;
+}
+
 export default {
+  getUrl(method, args = {}) {
+    const url = '/api/' + method.replace(/^\//, '');
+
+    args = jQuery.param(args);
+
+    return args ? (url + '?' + args) : url;
+  },
+
+  /*
+  getUrlWithToken(method, args = {}) {
+    const token = store.state.token;
+    if (token) {
+      args.token = token;
+    }
+
+    return this.getUrl(method, params);
+  },
+  */
+
   doRequest(method, args = {}) {
     return new Promise((resolve, reject) => {
+      args = objectToFormData(args, true);
+
       /*
-      const token = cookies.get('token');
+      const token = store.state.token;
       if (token) {
         if (args instanceof FormData) {
           args.set('token', token);
@@ -13,7 +66,7 @@ export default {
       */
 
       const ajaxOptions = {
-        url: '/api/' + method,
+        url: this.getUrl(method),
         method: 'POST',
         cache: false
       };
