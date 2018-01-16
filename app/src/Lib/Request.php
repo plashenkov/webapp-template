@@ -14,6 +14,9 @@ class Request
     protected $bodyParams = [];
 
     /** @var array */
+    protected $files = [];
+
+    /** @var array */
     protected $routeParams = [];
 
     /** @var array */
@@ -26,6 +29,7 @@ class Request
     {
         $this->processPath();
         $this->parseBody();
+        $this->parseFiles();
     }
 
     /**
@@ -72,7 +76,7 @@ class Request
     }
 
     /**
-     * Searches and returns parameter from both query (GET) and body (POST or JSON).
+     * Searches and returns parameter from query (GET), files, and body (POST or JSON).
      * A dot syntax can be used to get to a nested value.
      * @param string $key
      * @param mixed $default
@@ -80,12 +84,17 @@ class Request
      */
     public function getParam($key, $default = null)
     {
-        $result = arrayGetItem($this->bodyParams, $key);
+        $result = $this->getBodyParam($key);
         if (isset($result)) {
             return $result;
         }
 
-        $result = arrayGetItem($_GET, $key);
+        $result = $this->getUploadedFile($key);
+        if (isset($result)) {
+            return $result;
+        }
+
+        $result = $this->getQueryParam($key);
         if (isset($result)) {
             return $result;
         }
@@ -94,14 +103,14 @@ class Request
     }
 
     /**
-     * Returns a combined array of parameters from query (GET) and body (POST or JSON).
+     * Returns a combined array of parameters from query (GET), files, and body (POST or JSON).
      * @param array|null $takeOnly
      * @return array
      */
     public function getParams($takeOnly = null)
     {
         if (!isset($this->allParams)) {
-            $this->allParams = array_replace($_GET, $this->bodyParams);
+            $this->allParams = array_replace_recursive($_GET, $this->files, $this->bodyParams);
         }
 
         return arrayTakeOnly($this->allParams, $takeOnly);
@@ -153,6 +162,37 @@ class Request
     public function getBodyParams($takeOnly = null)
     {
         return arrayTakeOnly($this->bodyParams, $takeOnly);
+    }
+
+    /**
+     * Returns uploaded file.
+     * A dot syntax can be used to get to a nested value.
+     * @param string $key
+     * @return UploadedFile|null
+     */
+    public function getUploadedFile($key)
+    {
+        $result = arrayGetItem($this->files, $key);
+
+        return $result instanceof UploadedFile ? $result : null;
+    }
+
+    /**
+     * Returns array of uploaded files.
+     * @param array|null $takeOnly
+     * @return array
+     */
+    public function getUploadedFiles($takeOnly = null)
+    {
+        $files = arrayTakeOnly($this->files, $takeOnly);
+
+        foreach ($files as $key => $file) {
+            if (!$file instanceof UploadedFile) {
+                unset($files[$key]);
+            }
+        }
+
+        return $files;
     }
 
     /**
@@ -233,6 +273,31 @@ class Request
             $this->bodyParams = json_decode(file_get_contents('php://input'), true);
         } else {
             $this->bodyParams = $_POST;
+        }
+    }
+
+    /**
+     * Parses and rearranges $_FILES array.
+     */
+    protected function parseFiles()
+    {
+        $processItem = function ($parentItem, &$result, $property) use (&$processItem) {
+            if (is_array($parentItem)) {
+                foreach ($parentItem as $key => $item) {
+                    $processItem($item, $result[$key], $property);
+                }
+            } else {
+                if (!$result instanceof UploadedFile) {
+                    $result = new UploadedFile;
+                }
+                $result->setProperty($property, $parentItem);
+            }
+        };
+
+        foreach ($_FILES as $key => $properties) {
+            foreach ($properties as $property => $item) {
+                $processItem($item, $this->files[$key], $property);
+            }
         }
     }
 }
