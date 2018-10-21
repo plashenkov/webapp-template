@@ -2,7 +2,7 @@ RewriteEngine on
 
 # Handle subdomain
 # NOTE: place .htaccess inside subdomain folder (otherwise it will not work)
-# RewriteCond %{HTTP_HOST} ^subdomain1\.domain\.com$ [NC]
+# RewriteCond %{HTTP_HOST} ^subdomain1\. [NC]
 # RewriteRule ^(.*)$ /subdomains/subdomain1/$1 [L]
 
 # Remove WWW
