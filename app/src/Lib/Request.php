@@ -33,6 +33,15 @@ class Request
     }
 
     /**
+     * Returns the client's IP address.
+     * @return string
+     */
+    public function getClientIP()
+    {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+
+    /**
      * Returns host name.
      * @return string
      */
@@ -174,7 +183,7 @@ class Request
     {
         $result = arrayGetItem($this->files, $key);
 
-        return $result instanceof UploadedFile ? $result : null;
+        return $result instanceof UploadedFile || is_array($result) ? $result : null;
     }
 
     /**
@@ -187,7 +196,7 @@ class Request
         $files = arrayTakeOnly($this->files, $takeOnly);
 
         foreach ($files as $key => $file) {
-            if (!$file instanceof UploadedFile) {
+            if (!$file instanceof UploadedFile && !is_array($file)) {
                 unset($files[$key]);
             }
         }
