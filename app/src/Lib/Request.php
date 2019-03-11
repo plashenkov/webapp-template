@@ -42,6 +42,18 @@ class Request
     }
 
     /**
+     * Returns true if the request is Ajax request.
+     * @return bool
+     */
+    public function isAjax()
+    {
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+        );
+    }
+
+    /**
      * Returns host name.
      * @return string
      */
