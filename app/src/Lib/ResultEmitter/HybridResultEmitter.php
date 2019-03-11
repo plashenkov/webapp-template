@@ -2,8 +2,6 @@
 
 namespace App\Lib\ResultEmitter;
 
-use App\Lib\ResultEmitter;
-
 class HybridResultEmitter implements ResultEmitter
 {
     /** @var bool */

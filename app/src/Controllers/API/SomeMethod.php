@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\API;
 
-use App\Core\BaseController;
+use App\Lib\Controller;
 
-class ApiController extends BaseController
+class SomeMethod extends Controller
 {
-    public function someMethod()
+    public function __invoke()
     {
         return [
             'items' => [

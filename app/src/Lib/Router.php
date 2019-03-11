@@ -2,6 +2,7 @@
 
 namespace App\Lib;
 
+use App\Lib\ResultEmitter\ResultEmitter;
 use Auryn\Injector;
 use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
@@ -16,9 +17,6 @@ class Router extends RouteCollector
     /** @var Request */
     protected $request;
 
-    /** @var string */
-    protected $controllersNamespace;
-
     /** @var ResultEmitter */
     protected $resultEmitter;
 
@@ -26,20 +24,17 @@ class Router extends RouteCollector
      * Router constructor.
      * @param Injector $injector
      * @param Request $request
-     * @param string $controllersNamespace
      * @param ResultEmitter|null $resultEmitter
      */
     public function __construct(
         Injector $injector,
         Request $request,
-        $controllersNamespace = 'App\Controllers',
         ResultEmitter $resultEmitter = null
     ) {
         parent::__construct(new RouteParser, new DataGenerator);
 
         $this->injector = $injector;
         $this->request = $request;
-        $this->controllersNamespace = rtrim($controllersNamespace, '\\');
         $this->resultEmitter = $resultEmitter;
     }
 
@@ -76,28 +71,8 @@ class Router extends RouteCollector
 
             case Dispatcher::FOUND:
                 $this->request->setRouteParams($routeInfo[2]);
-                $this->echoResult(
-                    $this->injector->execute($this->preprocessHandler($routeInfo[1]))
-                );
+                $this->echoResult($this->injector->execute($routeInfo[1]));
         }
-    }
-
-    /**
-     * Prepares route handler (adds namespace, etc.)
-     * @param $handler
-     * @return string
-     */
-    protected function preprocessHandler($handler)
-    {
-        if ($this->controllersNamespace
-            && is_string($handler)
-            && strpos($handler, '\\') !== 0
-            && !is_callable($handler)
-        ) {
-            $handler = $this->controllersNamespace . '\\' . $handler;
-        }
-
-        return $handler;
     }
 
     /**

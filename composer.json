@@ -1,10 +1,11 @@
 {
     "require": {
+        "ext-json": "*",
         "nikic/fast-route": "^1.2",
         "filp/whoops": "^2.1",
         "rdlowrey/auryn": "^1.4",
         "monolog/monolog": "^1.23",
-        "league/plates": "^3.3"
+        "twig/twig": "^2.6"
     },
     "autoload": {
         "psr-4": {

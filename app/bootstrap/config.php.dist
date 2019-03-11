@@ -1,17 +1,17 @@
 <?php
 
 return [
-    'debug' => true,
+    'debug' => false,
 
     'database' => [
         'dsn' => 'mysql:host=...;dbname=...;charset=utf8',
         'user' => '...',
-        'password' => '...'
+        'password' => '...',
     ],
 
-    'views' => [
-        'directory' => __DIR__ . '/../frontend/views',
-        'fileExtension' => 'phtml'
+    'templates' => [
+        'dir' => __DIR__ . '/../templates',
+        'cache' => __DIR__ . '/../storage/templates_cache',
     ],
 
     'logFile' => __DIR__ . '/../storage/logs/log.txt',

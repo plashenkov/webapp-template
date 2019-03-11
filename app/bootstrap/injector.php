@@ -5,8 +5,9 @@ use App\Lib\ErrorHandler\HybridErrorHandler;
 use App\Lib\ResultEmitter\HybridResultEmitter;
 use App\Lib\Router;
 use App\Lib\Request;
+use App\Lib\View\TwigView;
+use App\Lib\View\View;
 use Auryn\Injector;
-use League\Plates\Engine as Plates;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Whoops\Handler\PrettyPageHandler;
@@ -18,7 +19,6 @@ $injector->share(Request::class);
 
 $injector->share(Router::class);
 $injector->define(Router::class, [
-    ':controllersNamespace' => 'App\Controllers',
     ':resultEmitter' => new HybridResultEmitter($config->get('debug'))
 ]);
 
@@ -36,10 +36,16 @@ $injector->define(Logger::class, [
     ':handlers' => [new StreamHandler($config->get('logFile'))]
 ]);
 
-$injector->share(Plates::class);
-$injector->define(Plates::class, [
-    ':directory' => $config->get('views.directory'),
-    ':fileExtension' => $config->get('views.fileExtension')
+$injector->alias(View::class, TwigView::class);
+
+$injector->share(TwigView::class);
+
+$injector->share(Twig_Environment::class);
+$injector->define(Twig_Environment::class, [
+    ':loader' => new Twig_Loader_Filesystem($config->get('templates.dir')),
+    ':options' => [
+        'cache' => $config->get('templates.cache'),
+    ],
 ]);
 
 $injector->share(DB::class);

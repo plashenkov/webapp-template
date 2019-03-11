@@ -10,7 +10,7 @@ A minimal and extendable web (PHP and Vue) application template.
 
    ```bash
    composer install
-   yarn install
+   npm install
    ```
 
 3. Copy `app/bootstrap/config.php.dist` to `app/bootstrap/config.php`.
@@ -18,11 +18,11 @@ A minimal and extendable web (PHP and Vue) application template.
 4. Start webpack in "watch" or "build" mode:
 
    ```
-   yarn run watch
+   npm run watch
    ```
-   
+
    ```
-   yarn run build
+   npm run build
    ```
 
 ## Notes and tips
@@ -39,7 +39,7 @@ You can find all the rules in `public_html/.htaccess` file. Just uncomment what 
 
 ## Credits
 
-[Yury Plashenkov](https://yuryplashenkov.com)
+[Yuri Plashenkov](https://plashenkov.com)
 
 ## License
 

@@ -2,6 +2,5 @@
 /app/bootstrap/config.php
 /node_modules
 /composer.lock
-/yarn.lock
-/yarn-error.log
+/package-lock.json
 /npm-debug.log

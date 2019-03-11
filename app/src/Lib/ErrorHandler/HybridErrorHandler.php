@@ -5,7 +5,7 @@ namespace App\Lib\ErrorHandler;
 use App\Lib\HttpException;
 use App\Lib\Validation\Exception\ParamValidationException;
 use App\Lib\Validation\Exception\ValidationException;
-use League\Plates\Engine as Plates;
+use App\Lib\View\View;
 use Whoops\Exception\Frame;
 use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
@@ -13,7 +13,7 @@ use Whoops\Util\Misc;
 /*
  * NOTE: use this class with PrettyPageHandler:
  *   $whoops->pushHandler(new PrettyPageHandler);
- *   $whoops->pushHandler(new HybridErrorHandler($isDebug, $plates));
+ *   $whoops->pushHandler(new HybridErrorHandler($isDebug, $view));
  */
 
 class HybridErrorHandler extends Handler
@@ -21,15 +21,15 @@ class HybridErrorHandler extends Handler
     /** @var bool */
     protected $isDebug;
 
-    /** @var Plates */
+    /** @var View */
     protected $view;
 
     /**
      * ErrorHandler constructor.
      * @param bool $isDebug
-     * @param Plates $view
+     * @param View $view
      */
-    public function __construct($isDebug, Plates $view)
+    public function __construct($isDebug, View $view)
     {
         $this->isDebug = $isDebug;
         $this->view = $view;
@@ -107,7 +107,7 @@ class HybridErrorHandler extends Handler
     }
 
     /**
-     * Builds a response based on Plates templates.
+     * Builds a response based on templates.
      * @return string
      */
     protected function buildHtmlResponse()
