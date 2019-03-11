@@ -50,7 +50,6 @@ class Router extends RouteCollector
 
     /**
      * Performs a dispatch.
-     * @throws HttpException
      * @throws \Auryn\InjectionException
      */
     public function dispatch()
@@ -71,7 +70,9 @@ class Router extends RouteCollector
 
             case Dispatcher::FOUND:
                 $this->request->setRouteParams($routeInfo[2]);
-                $this->echoResult($this->injector->execute($routeInfo[1]));
+                $this->echoResult(
+                    $this->injector->execute($routeInfo[1])
+                );
         }
     }
 
